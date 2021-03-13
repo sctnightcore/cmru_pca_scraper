@@ -1,7 +1,5 @@
 const puppeteer = require('puppeteer')
 const fs = require('fs');
-const { resolve } = require('path');
-const { Console } = require('console');
 
 async function readMembersData() {
     return new Promise((resolve) => {
