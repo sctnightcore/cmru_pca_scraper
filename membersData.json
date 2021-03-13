@@ -1,45 +1,16 @@
 [
   {
-    "id": "B4",
+    "id": "",
     "name": "",
     "nick_name": "",
     "class": "",
     "url": "https://m.facebook.com/photo.php?fbid=674647369904365&id=168400040529103",
-    "point": 16352,
-    "like": 15644,
-    "chart_like": "",
+    "point": "",
+    "like": "",
     "diff_like": 0,
-    "diff_like_status": "SAME",
-    "share": 236,
+    "diff_like_status": "",
+    "share": "",
     "diff_share": 0,
-    "diff_like_share": "SAME"
-  },
-  {
-    "id": "Q1",
-    "name": "",
-    "nick_name": "",
-    "class": "",
-    "url": "https://m.facebook.com/cmruscistar/photos/pcb.674648793237556/674648709904231/",
-    "point": 1785,
-    "like": 1458,
-    "diff_like": 0,
-    "diff_like_status": "SAME",
-    "share": 109,
-    "diff_share": 0,
-    "diff_like_share": "SAME"
-  },
-  {
-    "id": "Q2",
-    "name": "",
-    "nick_name": "",
-    "class": "",
-    "url": "https://m.facebook.com/photo.php?fbid=674648593237576&id=1684000405291034",
-    "point": 1218,
-    "like": 1137,
-    "diff_like": 0,
-    "diff_like_status": "SAME",
-    "share": 27,
-    "diff_share": 0,
-    "diff_like_share": "SAME"
+    "diff_like_share": ""
   }
 ]

@@ -21,18 +21,6 @@ async function readHistoryData() {
     })
 }
 
-async function getShare(page) {
-    let elHandle = await page.$x('/html/body/div[1]/div/div[3]/div[1]/div/div/div[5]/div[2]/div/div/div[2]/a[2]')
-    let share = await page.evaluate(el => el.textContent, elHandle[0]);
-    return Number(share.replace(/\D/g, ""))
-}
-
-async function getLike(page) {
-    let elHandle = await page.$x('/html/body/div[1]/div/div[3]/div[1]/div/div/div[5]/div[2]/div/div/div[3]/a/span')
-    let like = await page.evaluate(el => el.textContent, elHandle[0]);
-    return Number(like.replace(/\D/g, ""))
-}
-
 async function writeMembersFile(members) {
     return new Promise((resolve) => {
         fs.writeFile('membersData.json', JSON.stringify(members, null, 2), "utf8", resolve)
@@ -45,6 +33,17 @@ async function writeHistoryFile(history) {
     })
 }
 
+async function getShare(page) {
+    let elHandle = await page.$x('/html/body/div[1]/div/div[3]/div[1]/div/div/div[5]/div[2]/div/div/div[2]/a[2]')
+    let share = await page.evaluate(el => el.textContent, elHandle[0]);
+    return Number(share.replace(/\D/g, ""))
+}
+
+async function getLike(page) {
+    let elHandle = await page.$x('/html/body/div[1]/div/div[3]/div[1]/div/div/div[5]/div[2]/div/div/div[3]/a/span')
+    let like = await page.evaluate(el => el.textContent, elHandle[0]);
+    return Number(like.replace(/\D/g, ""))
+}
 
 async function main() {
     const browser = await puppeteer.launch()
@@ -58,7 +57,7 @@ async function main() {
     let history = await readHistoryData()
 
     // update member
-    for (let item of members.members) {
+    for (let item of members) {
         await page.goto(item.url)
 
         // get Share
@@ -80,10 +79,24 @@ async function main() {
 
     }
 
-    // update history
-    history[date].push({
+    // update history [ time ]
+    
+    // if array dont exist
+    if (typeof(history[date]) === "undefined") {
+        history[date] = {}
+        history[date]['day'] = {}
+        history[date]['time'] = []
+    }
+
+    // update history [ day ]
+    history[date]['day'] = members.map(el => ({
+        id: el.id, point: el.point, like: el.like, share: el.share
+    }))
+
+    // update history [ time ]
+    history[date]['time'].push({
         updatedAt: time,
-        members: members.members.map(el => ({
+        members: members.map(el => ({
             id: el.id, point: el.point, like: el.like, share: el.share
         }))
     })
