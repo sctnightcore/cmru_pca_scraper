@@ -1,9 +1,27 @@
 const puppeteer = require('puppeteer')
-const fs = require('fs')
+const fs = require('fs');
+const { resolve } = require('path');
+const { Console } = require('console');
 
-let members = require('../membersData.json');
-let chartmembers = require('../chartMembersData.json')
+async function readMembersData() {
+    return new Promise((resolve) => {
+        fs.readFile('membersData.json', 'utf8', (err, data) => {
+            if (err) return resolve([])
+            const json = JSON.parse(data)
+            return resolve(json)
+        })
+    })
+}
 
+async function readHistoryData() {
+    return new Promise((resolve) => {
+        fs.readFile('HistoryData.json', 'utf8', (err, data) => {
+            if (err) return resolve([])
+            const json = JSON.parse(data)
+            return resolve(json)
+        })
+    })
+}
 
 async function getShare(page) {
     let elHandle = await page.$x('/html/body/div[1]/div/div[3]/div[1]/div/div/div[5]/div[2]/div/div/div[2]/a[2]')
@@ -17,15 +35,15 @@ async function getLike(page) {
     return Number(like.replace(/\D/g, ""))
 }
 
-async function writeMembersFile() {
+async function writeMembersFile(members) {
     return new Promise((resolve) => {
         fs.writeFile('membersData.json', JSON.stringify(members, null, 2), "utf8", resolve)
     })
 }
 
-async function writeChartMembersFile() {
+async function writeHistoryFile(history) {
     return new Promise((resolve) => {
-        fs.writeFile('chartMembersData.json', JSON.stringify(chartmembers, null, 2), "utf8", resolve)
+        fs.writeFile('HistoryData.json', JSON.stringify(history, null, 2), "utf8", resolve)
     })
 }
 
@@ -33,8 +51,16 @@ async function writeChartMembersFile() {
 async function main() {
     const browser = await puppeteer.launch()
     const page = await browser.newPage();
-    const date = new Date().toLocaleString("th", { timeZone: "Asia/Bangkok" })
-    for (let item of members) {
+
+    const date = new Date().toLocaleDateString("th", { timeZone: "Asia/Bangkok" })
+    const time = new Date().toLocaleTimeString("th", { timeZone: "Asia/Bangkok" })
+    const date_time = `${new Date().toLocaleDateString("th", { timeZone: "Asia/Bangkok" })}:${new Date().toLocaleString("th", { timeZone: "Asia/Bangkok" })}`
+
+    let members = await readMembersData()
+    let history = await readHistoryData()
+
+    // update member
+    for (let item of members.members) {
         await page.goto(item.url)
 
         // get Share
@@ -42,9 +68,11 @@ async function main() {
         // get Like
         let like = await getLike(page)
 
-        // update 
+        // update member data
         item.share = share
         item.like = like
+
+        item.point = (Number(item.like) + (Number(item.share) * 3))
 
         item.diff_like = (Number(item.like) - like)
         item.diff_share = (Number(item.share) - share)
@@ -52,18 +80,35 @@ async function main() {
         item.diff_like_status = (Number(item.like) === like) ? "SAME" : (like > Number(item.like)) ? "UP" : "DOWN"
         item.diff_like_share = (Number(item.share) === share) ? "SAME" : (share > Number(item.share)) ? "UP" : "DOWN"
 
-        chartmembers[item.id].push({
-            updatedAt: date,
-            like: item.like,
-            share: item.share
-        })
     }
 
+    // update history
+    history[date].push({
+        updatedAt: time,
+        members: members.members.map(el => ({
+            id: el.id, point: el.point, like: el.like, share: el.share
+        }))
+    })
+
     // write file
-    await writeMembersFile()
-    await writeChartMembersFile()
+    await writeMembersFile(members)
+    await writeHistoryFile(history)
     await browser.close();
 }
 
 
 main()
+
+// sort point 
+//console.log(members.sort((a, b) => (a.point < b.point) ? 1 : -1))
+
+// like to list
+//console.log(members.map((el) => el.like))
+
+    //
+    // console.log(Object.keys(history).toString())
+    // update history data for chart ?
+
+    // update chart label 1 day ?
+
+    //members.chart_label = history[date].map(el => el.updatedAt)
