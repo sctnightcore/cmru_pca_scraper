@@ -79,8 +79,8 @@ async function main() {
 
     }
 
-    // update history [ time ]
-    
+
+    // update history
     // if array dont exist
     if (typeof(history[date]) === "undefined") {
         history[date] = {}
