@@ -5,12 +5,14 @@
     "nick_name": "",
     "class": "",
     "url": "https://m.facebook.com/photo.php?fbid=674647369904365&id=168400040529103",
-    "point": "",
-    "like": "",
-    "diff_like": 0,
-    "diff_like_status": "",
-    "share": "",
-    "diff_share": 0,
-    "diff_like_share": ""
+    "point": "16352",
+    "like": "15644",
+    "diff_like": "0",
+    "diff_like_status": "SAME",
+    "share": "236",
+    "diff_share": "0",
+    "diff_like_share": "SAME",
+    "last_history_day": [],
+    "last_history_time": []
   }
 ]

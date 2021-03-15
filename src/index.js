@@ -56,6 +56,7 @@ async function main() {
     let members = await readMembersData()
     let history = await readHistoryData()
 
+    console.log("Update all Members")
     // update member
     for (let item of members) {
         await page.goto(item.url)
@@ -79,13 +80,14 @@ async function main() {
 
     }
 
-
+    console.log("Update History")
     // update history
     // if array dont exist
-    if (typeof(history[date]) === "undefined") {
+    if (typeof (history[date]) === "undefined") {
         history[date] = {}
         history[date]['day'] = {}
-        history[date]['time'] = []
+        history[date]['time'] = {}
+        history[date]['time'][time] = {}
     }
 
     // update history [ day ]
@@ -94,12 +96,52 @@ async function main() {
     }))
 
     // update history [ time ]
-    history[date]['time'].push({
-        updatedAt: time,
-        members: members.map(el => ({
-            id: el.id, point: el.point, like: el.like, share: el.share
-        }))
-    })
+
+    history[date]['time'][time] = members.map(el => ({
+        id: el.id, point: el.point, like: el.like, share: el.share
+    }))
+
+    console.log("Update last 5 history of day")
+
+    // last_history_time
+    for (let item of members) {
+        for (let i in history[date]['time']) {
+            history[date]['time'][i].map(el => {
+                if (el.id === item.id) {
+                    if (Object.keys(item.last_history_time).length > 4) {
+                        item.last_history_time.pop()
+                    }
+                    item.last_history_time.push({
+                        date: date,
+                        time: i,
+                        point: el.point,
+                        like: el.like,
+                        share: el.share
+                    })
+                }
+            })
+        }
+    }
+
+    // last_history_day
+    console.log("Update all history")
+    for (let item of members) {
+        for (let i in history) {
+            history[i]['day'].map(el => {
+                if (el.id === item.id) {
+                    let checked = item.last_history_day.some((e) => e.updateAt === i)
+                    if (!checked) {
+                        item.last_history_day.push({
+                            updateAt: i.toString(),
+                            point: el.point,
+                            like: el.like,
+                            share: el.share
+                        })
+                    }
+                }
+            })
+        }
+    }
 
     // write file
     await writeMembersFile(members)
