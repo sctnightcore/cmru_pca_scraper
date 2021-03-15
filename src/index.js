@@ -66,13 +66,13 @@ async function main() {
         let like = await getLike(page)
 
         // update member data
-        item.share = share
-        item.like = like
+        item.share = share.toString()
+        item.like = like.toString()
 
-        item.point = (Number(item.like) + (Number(item.share) * 3))
+        item.point = (Number(item.like) + (Number(item.share) * 3)).toString()
 
-        item.diff_like = (Number(item.like) - like)
-        item.diff_share = (Number(item.share) - share)
+        item.diff_like = (Number(item.like) - like).toString()
+        item.diff_share = (Number(item.share) - share).toString()
 
         item.diff_like_status = (Number(item.like) === like) ? "SAME" : (like > Number(item.like)) ? "UP" : "DOWN"
         item.diff_like_share = (Number(item.share) === share) ? "SAME" : (share > Number(item.share)) ? "UP" : "DOWN"
