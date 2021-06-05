@@ -1,82 +1,60 @@
 
-## membersData.json
+## Member.json
 ### คือ ข้อมูลผู้ลงแข่งขันทั้งหมด
 
 ```
   {
-    "id": "",
-    "name": "",
+    "id": "B1",
+    "full_name": "",
     "nick_name": "",
-    "class": "",
-    "url": "",
-    "point": "",
-    "like": "",
-    "diff_like": 0,
-    "diff_like_status": "",
-    "share": "",
-    "diff_share": 0,
-    "diff_like_share": ""
+    "branch": "",
+    "url": "https://m.facebook.com/photo.php?fbid=674647389904363",
+    "all_point": 1,
+    "all_like": 229,
+    "all_share": 97
   }
-```
 
+```
 id = รหัสผู้เข้าแข่ง
 
-name = ชื่อ
+full_name = ชื่อเต็ม
 
 nick_name = ชื่อเล่น
 
-class = สาขา
+branch = สาขา
 
-url = ลิ้งแชร์ ต้องเป็น m.facebook เท่านั้น
+url = ลิ้งหน้าโหวต
 
-point = คะแนนรวม จาก like + share
+all_point = คะแนนรวม
 
-like = จำนวน Like
+all_like = คะแนนรวม ไลค์
 
-diff_like = Like เพิ่มขึ้นจำนวนเท่าไหร่ จากการเช็กครั้งที่แล้ว
-
-diff_like_status = สถานะ ของ diff_like [ same = เท่าเดิม , up = เพิ่มขึ้น, down = ลดลง]
-
-share = จำนวน share
-
-diff_share = Share เพิ่มขึ้นจำนวนเท่าไหร่ จากการเช็กครั้งที่แล้ว
-
-diff_like_share = สถานะ ของ diff_share [ same = เท่าเดิม , up = เพิ่มขึ้น, down = ลดลง]
-
-last_history_day = ข้อมูลย้อนหลังคะแนนย้อนหลังนับเป็นวัน
-
-last_history_time ข้อมูลย้อนหลัง อิงตามชั่วโมงต่อวัน
+all_share = คะแนนรวม แชร์
 
 
-## HistoryData.json
+## History.json
 ### คือ ข้อมูล การ Like / Share ทุกวัน แยกเป็น เวลา กับ วัน
 
 ```
-"16/3/2564": {
-  "day": [
-    {
-      "id": "",
-      "point": "16352",
-      "like": "15644",
-      "share": "236"
-    }
-  ],
-  "time": {
-    "01:02:32": [
-      {
-        "id": "",
-        "point": "16352",
-        "like": "15644",
-        "share": "236"
-      }
-    ]
-  }
+{
+  "start_date": "",
+  "end_data": "",
+  "update_time": "",
+  "point_data": [],
+  "like_data": [],
+  "share_data": []
 }
 
 ```
 
-key = วันที่เก็บข้อมูล
+start_end = วันเริ่มการแข่ง
 
-day = คะแนนล่าสุดในวันที่เก็บคะแนน
+end_date = วันจบการแข่งขัน
 
-time = คะแนนย้อนหลังทั้งหมดใน วันที่เก็บข้อมูล
+update_time = อัพเดพล่าสุด
+
+point_data = เก็บข้อมูลเป็น object 
+
+like_data = เก็บข้อมูลเป็น object
+
+share_data = เก็บข้อมูลเป็น object
