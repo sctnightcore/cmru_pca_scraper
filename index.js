@@ -1,7 +1,8 @@
 require("dotenv").config();
 const puppeteer = require("puppeteer");
-const log = require("./log");
-const fb = require("./fb");
+
+const log = require("./src/log");
+const fb = require("./src/fb");
 
 const dateTime = new Date().toLocaleString({ timeZone: "Asia/Bangkok" });
 const timeStemp = new Date(dateTime).getTime();
