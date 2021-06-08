@@ -7,6 +7,16 @@ const fb = require("./src/fb");
 const dateTime = new Date().toLocaleString({ timeZone: "Asia/Bangkok" });
 const timeStemp = new Date(dateTime).getTime();
 
+const update_HistoryData_by_Id = async (key, id, value, historyData) => {
+  let index = historyData[key].findIndex((o) => o["name"] === id);
+  if (index !== -1) {
+    historyData[key][index]["data"].push([timeStemp, value]);
+    return;
+  }
+  historyData[key].push({ name: id, data: [[timeStemp, value]] });
+  return;
+};
+
 const main = async () => {
   // read Data
   let memberData = await log.readFile("Member.json");
@@ -21,7 +31,7 @@ const main = async () => {
   const page = await browser.newPage();
 
   for (let i of memberData) {
-    console.log(`[CONSOLE] Read ${i["id"]} Data`);
+    console.log(`[CONSOLE][${i["id"]}] Read Data`);
 
     // go to page id
     await page.goto(i["url"], { waitUntil: "networkidle2" });
@@ -41,60 +51,33 @@ const main = async () => {
     i["all_share"] = share;
 
     // update History date
-
-    let index;
-    // update Point Data chart js
-    index = historyData["point_data"].findIndex((o) => o.name === i["id"]);
-    if (index === -1) {
-      // check if object is exist
-      historyData["point_data"].push({
-        name: i["id"],
-        data: [[timeStemp, i["all_point"]]],
-      });
-    } else {
-      // push new data to object with index
-      historyData["point_data"][index]["data"].push([
-        timeStemp,
-        i["all_point"],
-      ]);
-    }
-
-    // update Like Data
-    index = historyData["like_data"].findIndex((o) => o.name === i["id"]);
-    if (index === -1) {
-      // check if object is exist
-      historyData["like_data"].push({
-        name: i["id"],
-        data: [[timeStemp, i["all_like"]]],
-      });
-    } else {
-      // push new data to object with index
-      historyData["like_data"][index]["data"].push([
-        timeStemp,
-        i["all_like"],
-      ]);
-    }
-
-    // update Like Data
-    index = historyData["share_data"].findIndex((o) => o.name === i["id"]);
-    if (index === -1) {
-      // check if object is exist
-      historyData["share_data"].push({
-        name: i["id"],
-        data: [[timeStemp, i["all_share"]]],
-      });
-    } else {
-      // push new data to object with index
-      historyData["share_data"][index]["data"].push([
-        timeStemp,
-        i["all_share"],
-      ]);
-    }
-
-    console.log(
-      `[CONSOLE] ${i["id"]} POINT: ${i["all_point"]} LIKE: ${i["all_like"]} SHARE: ${i["all_share"]}`
+    console.log(`[CONSOLE][${i["id"]}] Update HistoryData point_data`);
+    await update_HistoryData_by_Id(
+      "point_data",
+      i["id"],
+      i["all_point"],
+      historyData
     );
 
+    console.log(`[CONSOLE][${i["id"]}] Update HistoryData like_data`);
+    await update_HistoryData_by_Id(
+      "like_data",
+      i["id"],
+      i["all_like"],
+      historyData
+    );
+
+    console.log(`[CONSOLE][${i["id"]}] Update HistoryData share_data`);
+    await update_HistoryData_by_Id(
+      "share_data",
+      i["id"],
+      i["all_share"],
+      historyData
+    );
+
+    console.log(
+      `[CONSOLE][${i["id"]}] POINT: ${i["all_point"]} LIKE: ${i["all_like"]} SHARE: ${i["all_share"]}`
+    );
   }
 
   await browser.close();
